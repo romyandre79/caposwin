@@ -1,0 +1,25 @@
+inherited BaseListForm: TBaseListForm
+  Height = 309
+  Width = 554
+  ClientHeight = 309
+  ClientWidth = 554
+  OnCreate = nil
+  object tobBaseList: TToolBar[0]
+    Left = 0
+    Height = 40
+    Top = 0
+    Width = 554
+    ButtonHeight = 32
+    ButtonWidth = 32
+    Caption = 'tobBaseList'
+    TabOrder = 0
+    Transparent = True
+    object btnNew: TToolButton
+      Left = 1
+      Hint = 'New'
+      Top = 2
+      Caption = 'New'
+      ImageIndex = 0
+    end
+  end
+end

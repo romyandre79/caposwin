@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="22">
+      <Unit0>
+        <Filename Value="caposwin.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="4"/>
+        <CursorPos X="20" Y="22"/>
+        <UsageCount Value="200"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="ubaseform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BaseForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uBaseForm"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="355"/>
+        <CursorPos X="79" Y="374"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="ubaselistform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BaseListForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="7"/>
+        <CursorPos X="21" Y="17"/>
+        <UsageCount Value="200"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="ucphelper.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="200"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="uloginform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="LoginForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="51"/>
+        <CursorPos X="3" Y="48"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="umainform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="125"/>
+        <CursorPos X="29" Y="135"/>
+        <UsageCount Value="163"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="umessageform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MessageForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="21"/>
+        <UsageCount Value="117"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="urestrequest.pas"/>
+        <UnitName Value="uRESTRequest"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="40"/>
+        <CursorPos X="41" Y="42"/>
+        <UsageCount Value="16"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="ubaselistform.lfm"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="1"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="uloginform.lfm"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="1"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="caposwin.ini"/>
+        <CursorPos X="36" Y="14"/>
+        <UsageCount Value="103"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Ini"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\Users\gokaiger\AppData\Local\lazarus\onlinepackagemanager\packages\Indy10\System\IdStack.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="963"/>
+        <CursorPos Y="971"/>
+        <UsageCount Value="5"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="185"/>
+        <CursorPos X="23" Y="194"/>
+        <UsageCount Value="5"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-json\src\jsonparser.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="42"/>
+        <CursorPos X="17" Y="50"/>
+        <UsageCount Value="5"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-json\src\fpjson.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="535"/>
+        <CursorPos X="14" Y="546"/>
+        <UsageCount Value="8"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\Users\gokaiger\AppData\Local\lazarus\onlinepackagemanager\packages\Indy10\Protocols\IdHTTP.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="558"/>
+        <CursorPos X="14" Y="565"/>
+        <UsageCount Value="5"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\lazarus\lcl\include\control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1657"/>
+        <CursorPos Y="1669"/>
+        <UsageCount Value="18"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="umainform.lfm"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="31"/>
+        <CursorPos X="10"/>
+        <UsageCount Value="9"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\lcl\comctrls.pp"/>
+        <UnitName Value="ComCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3186"/>
+        <CursorPos X="14" Y="3173"/>
+        <UsageCount Value="18"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\lazarus\lcl\intfgraphics.pas"/>
+        <UnitName Value="IntfGraphics"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3300"/>
+        <CursorPos X="20" Y="3321"/>
+        <UsageCount Value="6"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-process\src\process.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="102"/>
+        <CursorPos X="20" Y="116"/>
+        <UsageCount Value="10"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="C:\lazarus\fpc\3.0.4\source\packages\fcl-process\src\win\process.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="228"/>
+        <CursorPos X="3" Y="232"/>
+        <UsageCount Value="10"/>
+      </Unit21>
+    </Units>
+    <JumpHistory Count="27" HistoryIndex="26">
+      <Position1>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="145" Column="49" TopLine="139"/>
+      </Position1>
+      <Position2>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="150" Column="25" TopLine="140"/>
+      </Position2>
+      <Position3>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="149" Column="25" TopLine="139"/>
+      </Position3>
+      <Position4>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="148" Column="25" TopLine="138"/>
+      </Position4>
+      <Position5>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="147" Column="25" TopLine="137"/>
+      </Position5>
+      <Position6>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="146" Column="25" TopLine="136"/>
+      </Position6>
+      <Position7>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="40" Column="27" TopLine="37"/>
+      </Position7>
+      <Position8>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="82" Column="30" TopLine="74"/>
+      </Position8>
+      <Position9>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="303" Column="20" TopLine="269"/>
+      </Position9>
+      <Position10>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="63" Column="14" TopLine="51"/>
+      </Position10>
+      <Position11>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="304" Column="33" TopLine="294"/>
+      </Position11>
+      <Position12>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="89" Column="34" TopLine="75"/>
+      </Position12>
+      <Position13>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="145" Column="28" TopLine="124"/>
+      </Position13>
+      <Position14>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="268" Column="16" TopLine="265"/>
+      </Position14>
+      <Position15>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="9" Column="78"/>
+      </Position15>
+      <Position16>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="309" Column="20" TopLine="295"/>
+      </Position16>
+      <Position17>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="9" Column="79"/>
+      </Position17>
+      <Position18>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="310" Column="4" TopLine="304"/>
+      </Position18>
+      <Position19>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="318" Column="17" TopLine="305"/>
+      </Position19>
+      <Position20>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="362" Column="44" TopLine="351"/>
+      </Position20>
+      <Position21>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="55" Column="19" TopLine="36"/>
+      </Position21>
+      <Position22>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="280" Column="45" TopLine="269"/>
+      </Position22>
+      <Position23>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="56" Column="23" TopLine="32"/>
+      </Position23>
+      <Position24>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="281" Column="40" TopLine="270"/>
+      </Position24>
+      <Position25>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="133" Column="31" TopLine="118"/>
+      </Position25>
+      <Position26>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="139" Column="26" TopLine="125"/>
+      </Position26>
+      <Position27>
+        <Filename Value="ubaseform.pas"/>
+        <Caret Line="70" Column="24" TopLine="58"/>
+      </Position27>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+  <Debugging>
+    <Watches Count="4">
+      <Item1>
+        <Expression Value="lResponse"/>
+      </Item1>
+      <Item2>
+        <Expression Value="User.menuitems"/>
+        <DisplayStyle Value="wdfChar"/>
+      </Item2>
+      <Item3>
+        <Expression Value="PageMenu.Pages[i].Caption"/>
+      </Item3>
+      <Item4>
+        <Expression Value="tvMainForm.Selected.Text"/>
+      </Item4>
+    </Watches>
+  </Debugging>
+</CONFIG>

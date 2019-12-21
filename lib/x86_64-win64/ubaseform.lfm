@@ -1,0 +1,13 @@
+object BaseForm: TBaseForm
+  Left = 277
+  Height = 240
+  Top = 120
+  Width = 320
+  Caption = 'Base Form'
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  ShowHint = True
+  ShowInTaskBar = stNever
+  LCLVersion = '2.0.6.0'
+end
