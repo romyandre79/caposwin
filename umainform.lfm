@@ -1,12 +1,13 @@
 inherited MainForm: TMainForm
-  Left = 33
+  Left = 349
   Height = 463
-  Top = 190
-  Width = 797
+  Top = 174
+  Width = 796
   BorderStyle = bsNone
   Caption = 'Capella ERP Indonesia'
   ClientHeight = 463
-  ClientWidth = 797
+  ClientWidth = 796
+  Color = clWhite
   Font.CharSet = ANSI_CHARSET
   Font.Color = clBlack
   Font.Height = -13
@@ -16,19 +17,38 @@ inherited MainForm: TMainForm
   OnActivate = FormActivate
   OnDestroy = nil
   WindowState = wsMaximized
-  object ImageWallpaper: TImage[0]
+  object DBGrid1: TDBGrid[0]
+    Left = 45
+    Height = 100
+    Top = 78
+    Width = 200
+    Color = clWindow
+    Columns = <    
+      item
+        Title.Caption = 'Title'
+        Width = 150
+      end>
+    TabOrder = 0
+    TitleFont.CharSet = ANSI_CHARSET
+    TitleFont.Color = clBlack
+    TitleFont.Height = -13
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Pitch = fpVariable
+    TitleFont.Quality = fqDraft
+  end
+  object ImageWallpaper: TImage[1]
     Left = 312
     Height = 387
     Top = 56
-    Width = 485
+    Width = 484
     Align = alClient
     Transparent = True
   end
-  object StatusBarMainForm: TStatusBar[1]
+  object StatusBarMainForm: TStatusBar[2]
     Left = 0
     Height = 20
     Top = 443
-    Width = 797
+    Width = 796
     Panels = <    
       item
         Alignment = taRightJustify
@@ -36,7 +56,7 @@ inherited MainForm: TMainForm
       end>
     SimplePanel = False
   end
-  object TreeViewMainForm: TTreeView[2]
+  object TreeViewMainForm: TTreeView[3]
     Left = 0
     Height = 387
     Top = 56
@@ -59,25 +79,27 @@ inherited MainForm: TMainForm
     OnDblClick = TreeViewMainFormDblClick
     Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
-  object PageMenu: TPageControl[3]
+  object PageMenu: TPageControl[4]
     Left = 312
     Height = 387
     Top = 56
-    Width = 485
-    ActivePage = TabHome
+    Width = 484
+    ActivePage = TabSheetLanguage
     Align = alClient
-    TabIndex = 0
+    MultiLine = True
+    PopupMenu = PopUpMainForm
+    TabIndex = 1
     TabOrder = 2
-    Options = [nboShowCloseButtons]
+    Options = [nboShowCloseButtons, nboMultiLine]
     object TabHome: TTabSheet
       Caption = '&Home'
       ClientHeight = 358
-      ClientWidth = 477
+      ClientWidth = 476
       object PageHome: TPageControl
         Left = 0
         Height = 358
         Top = 0
-        Width = 477
+        Width = 476
         ActivePage = TabProfilUser
         Align = alClient
         TabIndex = 0
@@ -85,7 +107,7 @@ inherited MainForm: TMainForm
         object TabProfilUser: TTabSheet
           Caption = '&Profil User'
           ClientHeight = 329
-          ClientWidth = 469
+          ClientWidth = 468
           object LabelUserName: TLabel
             Left = 24
             Height = 16
@@ -221,37 +243,195 @@ inherited MainForm: TMainForm
         end
       end
     end
+    object TabSheetLanguage: TTabSheet
+      Caption = 'TabSheetLanguage'
+      ClientHeight = 358
+      ClientWidth = 476
+      object ToolBarLanguage: TToolBar
+        Left = 0
+        Height = 48
+        Top = 0
+        Width = 476
+        ButtonHeight = 32
+        ButtonWidth = 32
+        Caption = 'ToolBarLanguage'
+        Images = ImageListButton
+        TabOrder = 0
+        object ToolButtonLanguageNew: TToolButton
+          Left = 1
+          Top = 2
+          Caption = 'ToolButtonLanguageNew'
+          ImageIndex = 0
+        end
+        object ToolButtonLanguageEdit: TToolButton
+          Left = 37
+          Top = 2
+          Caption = 'ToolButtonLanguageEdit'
+          ImageIndex = 1
+        end
+        object ToolButtonLanguageSave: TToolButton
+          Left = 105
+          Top = 2
+          Caption = 'ToolButtonLanguageSave'
+          ImageIndex = 3
+        end
+        object ToolButtonLanguagePDF: TToolButton
+          Left = 141
+          Top = 2
+          Caption = 'ToolButtonLanguagePDF'
+          ImageIndex = 4
+        end
+        object ToolButtonLanguageXLS: TToolButton
+          Left = 173
+          Top = 2
+          Caption = 'ToolButtonLanguageXLS'
+          ImageIndex = 5
+        end
+        object ToolButtonLanguageSearch: TToolButton
+          Left = 209
+          Top = 2
+          Caption = 'ToolButtonLanguageSearch'
+          ImageIndex = 6
+        end
+        object ToolButtonLanguageHistory: TToolButton
+          Left = 245
+          Top = 2
+          Caption = 'ToolButtonLanguageHistory'
+          ImageIndex = 7
+        end
+        object ToolButtonLanguagePurge: TToolButton
+          Left = 281
+          Top = 2
+          Caption = 'ToolButtonLanguagePurge'
+          ImageIndex = 8
+        end
+        object ToolButtonLanguageCopy: TToolButton
+          Left = 73
+          Top = 2
+          Caption = 'ToolButtonLanguageCopy'
+          ImageIndex = 2
+        end
+      end
+      object DBGridLanguage: TDBGrid
+        Left = 0
+        Height = 310
+        Top = 48
+        Width = 476
+        Align = alClient
+        AutoEdit = False
+        BorderStyle = bsNone
+        Color = clWindow
+        Columns = <        
+          item
+            Title.Alignment = taCenter
+            Title.Caption = 'languageid'
+            Width = 100
+            FieldName = 'languageid'
+          end        
+          item
+            Title.Alignment = taCenter
+            Title.Caption = 'languagename'
+            Width = 200
+            FieldName = 'languagename'
+          end        
+          item
+            ButtonStyle = cbsCheckboxColumn
+            Title.Alignment = taCenter
+            Title.Caption = 'recordstatus'
+            Width = 100
+            FieldName = 'recordstatus'
+          end>
+        DataSource = DSLanguage
+        Flat = True
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+        TabOrder = 1
+        TitleFont.CharSet = ANSI_CHARSET
+        TitleFont.Color = clBlack
+        TitleFont.Height = -13
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Pitch = fpVariable
+        TitleFont.Quality = fqDraft
+      end
+    end
   end
-  object PanelButton: TPanel[4]
+  object PanelButton: TPanel[5]
     Left = 0
     Height = 56
     Top = 0
-    Width = 797
+    Width = 796
     Align = alTop
     BevelOuter = bvNone
     ClientHeight = 56
-    ClientWidth = 797
+    ClientWidth = 796
     TabOrder = 3
-    object btnClose: TBitBtn
+    object ButtonClose: TBitBtn
       Left = 8
       Height = 40
       Top = 8
       Width = 91
       Caption = '&Close'
-      OnClick = btnCloseClick
+      Color = clWhite
+      OnClick = ButtonCloseClick
       TabOrder = 0
     end
   end
-  object TimerMainForm: TTimer[5]
+  object TimerMainForm: TTimer[6]
     OnTimer = TimerMainFormTimer
-    left = 96
-    top = 88
+    left = 64
+    top = 56
   end
-  object ImageListMainForm: TImageList[6]
+  object ImageListMainForm: TImageList[7]
     DrawingStyle = dsTransparent
     Height = 32
     Width = 32
-    left = 144
-    top = 176
+    left = 160
+    top = 56
+  end
+  object ImageListButton: TImageList[8]
+    Height = 32
+    Width = 32
+    left = 200
+    top = 56
+  end
+  object SaveDialogMainForm: TSaveDialog[9]
+    Filter = 'Microsoft Excel File|.xlsx|CSV File|.csv'
+    left = 112
+    top = 56
+  end
+  object PopUpMainForm: TPopupMenu[10]
+    left = 8
+    top = 56
+    object MenuItemCloseTab: TMenuItem
+      Caption = '&Close Tab'
+    end
+  end
+  object DSLanguage: TDataSource[11]
+    AutoEdit = False
+    DataSet = MemDSLanguage
+    left = 32
+    top = 344
+  end
+  object MemDSLanguage: TMemDataset[12]
+    FieldDefs = <    
+      item
+        Name = 'languageid'
+        Attributes = [faReadonly]
+        DataType = ftInteger
+        Size = 10
+      end    
+      item
+        Name = 'languagename'
+        Attributes = [faRequired]
+        DataType = ftString
+        Size = 50
+      end    
+      item
+        Name = 'recordstatus'
+        Attributes = [faRequired]
+        DataType = ftBytes
+        Size = 10
+      end>
+    left = 96
+    top = 344
   end
 end

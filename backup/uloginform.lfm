@@ -10,8 +10,6 @@ inherited LoginForm: TLoginForm
   ClientWidth = 1354
   Color = clWhite
   OnActivate = actFormActivatedExecute
-  OnClose = nil
-  OnCloseQuery = nil
   OnCreate = FormCreate
   OnDestroy = nil
   WindowState = wsMaximized
@@ -41,7 +39,7 @@ inherited LoginForm: TLoginForm
   object Label2: TLabel[2]
     Left = 544
     Height = 19
-    Top = 416
+    Top = 424
     Width = 67
     Caption = 'Password'
     Font.CharSet = ANSI_CHARSET
@@ -55,9 +53,10 @@ inherited LoginForm: TLoginForm
   end
   object edPassword: TEdit[3]
     Left = 640
-    Height = 23
-    Top = 416
+    Height = 31
+    Top = 424
     Width = 160
+    AutoSize = False
     BorderStyle = bsNone
     EchoMode = emPassword
     Font.CharSet = ANSI_CHARSET
@@ -99,9 +98,10 @@ inherited LoginForm: TLoginForm
   end
   object edUserName: TEdit[7]
     Left = 640
-    Height = 23
+    Height = 32
     Top = 384
     Width = 160
+    AutoSize = False
     BorderStyle = bsNone
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
@@ -122,7 +122,6 @@ inherited LoginForm: TLoginForm
     Alignment = taCenter
     AutoSize = False
     Caption = 'CAPELLA ERP INDONESIA'
-    Color = clDefault
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -64
@@ -131,6 +130,5 @@ inherited LoginForm: TLoginForm
     Font.Quality = fqDraft
     ParentColor = False
     ParentFont = False
-    Transparent = False
   end
 end

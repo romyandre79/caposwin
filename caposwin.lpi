@@ -33,22 +33,34 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="5">
+    <RequiredPackages Count="9">
       <Item1>
-        <PackageName Value="JvCtrlsLazR"/>
+        <PackageName Value="FCL"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvPageCompsR"/>
+        <PackageName Value="MemDSLaz"/>
       </Item2>
       <Item3>
-        <PackageName Value="JvCustomLazR"/>
+        <PackageName Value="lazupdate"/>
       </Item3>
       <Item4>
-        <PackageName Value="weblaz"/>
+        <PackageName Value="virtualtreeview_package"/>
       </Item4>
       <Item5>
-        <PackageName Value="LCL"/>
+        <PackageName Value="JvCtrlsLazR"/>
       </Item5>
+      <Item6>
+        <PackageName Value="JvPageCompsR"/>
+      </Item6>
+      <Item7>
+        <PackageName Value="JvCustomLazR"/>
+      </Item7>
+      <Item8>
+        <PackageName Value="weblaz"/>
+      </Item8>
+      <Item9>
+        <PackageName Value="LCL"/>
+      </Item9>
     </RequiredPackages>
     <Units Count="7">
       <Unit0>
@@ -116,7 +128,7 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="8">
+    <Exceptions Count="9">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -141,6 +153,9 @@
       <Item8>
         <Name Value="EClassNotFound"/>
       </Item8>
+      <Item9>
+        <Name Value="EVariantError"/>
+      </Item9>
     </Exceptions>
   </Debugging>
 </CONFIG>

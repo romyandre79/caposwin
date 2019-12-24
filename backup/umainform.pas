@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  Menus, Buttons, StdCtrls, uBaseForm;
+  Menus, Buttons, StdCtrls, DBGrids, uBaseForm, db, memds, jsonparser,fpjson;
 
 type
 
@@ -14,14 +14,18 @@ type
 
   TMainForm = class(TBaseForm)
     ButtonOK: TBitBtn;
-    btnClose: TBitBtn;
+    ButtonClose: TBitBtn;
     ComboBoxLanguage: TComboBox;
     ComboBoxTheme: TComboBox;
+    DBGridLanguage: TDBGrid;
+    DSLanguage: TDataSource;
+    DBGrid1: TDBGrid;
     EditPhoneNo: TEdit;
     EditRealName: TEdit;
     EditEmail: TEdit;
     EditUserName: TEdit;
     EditPassword: TEdit;
+    ImageListButton: TImageList;
     ImageListMainForm: TImageList;
     ImageWallpaper: TImage;
     LabelTheme: TLabel;
@@ -31,15 +35,30 @@ type
     LabelEmail: TLabel;
     LabelUserName: TLabel;
     LabelPassword: TLabel;
+    MemDSLanguage: TMemDataset;
+    MenuItemCloseTab: TMenuItem;
     PageHome: TPageControl;
     PanelButton: TPanel;
     PageMenu: TPageControl;
+    PopUpMainForm: TPopupMenu;
+    SaveDialogMainForm: TSaveDialog;
     StatusBarMainForm: TStatusBar;
     TabHome: TTabSheet;
     TabProfilUser: TTabSheet;
+    TabSheetLanguage: TTabSheet;
     TimerMainForm: TTimer;
+    ToolBarLanguage: TToolBar;
+    ToolButtonLanguageCopy: TToolButton;
+    ToolButtonLanguagePurge: TToolButton;
+    ToolButtonLanguageHistory: TToolButton;
+    ToolButtonLanguageSearch: TToolButton;
+    ToolButtonLanguageXLS: TToolButton;
+    ToolButtonLanguagePDF: TToolButton;
+    ToolButtonLanguageSave: TToolButton;
+    ToolButtonLanguageEdit: TToolButton;
+    ToolButtonLanguageNew: TToolButton;
     TreeViewMainForm: TTreeView;
-    procedure btnCloseClick(Sender: TObject);
+    procedure ButtonCloseClick(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure TimerMainFormTimer(Sender: TObject);
@@ -48,6 +67,7 @@ type
     FLanguage, FTheme: TStringList;
     procedure GetLanguageListAllUser();
     procedure GetThemeListAllUser();
+    procedure SetUpTab(MenuName: string);
   public
 
   end;
@@ -71,7 +91,7 @@ begin
   ImageListMainForm.Clear;
   Pic:= TPicture.Create;
   Pic.LoadFromFile('icons/close.png');
-  btnClose.Glyph.Assign(Pic.Bitmap);
+  ButtonClose.Glyph.Assign(Pic.Bitmap);
   for i:=0 to length(User.menuitems)-1 do
   begin
     Pic:= TPicture.Create;
@@ -121,9 +141,40 @@ begin
   ComboBoxTheme.Text:= User.themename;
   LabelUserName.Caption:= GetMessageAPI('username');
   EditUserName.Caption:= User.UserName;
+  ImageListButton.Clear;
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/add.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/edit.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/copy.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/save.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  ButtonOK.Glyph.Assign(Pic.Bitmap);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/pdf.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/xls.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/history.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/purge.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  PageMenu.ActivePageIndex:=0;
+  For i:= 1 to PageMenu.PageCount - 1 do
+  begin
+    PageMenu.Pages[i].TabVisible:= false;
+  end;
 end;
 
-procedure TMainForm.btnCloseClick(Sender: TObject);
+procedure TMainForm.ButtonCloseClick(Sender: TObject);
 begin
   Close;
 end;
@@ -143,7 +194,8 @@ begin
   SlBody.Add('datauser='+GetDataUser);
   try
      GetDataAPI('useraccess/saveprofile');
-     DlgMessage(HeaderMsg,msg,mtInformation);
+     DlgMessage(HeaderMsg,msg+' Application will close',mtInformation);
+     Application.Terminate;
   except
   on E: Exception do
      DlgMessage(HeaderMsg,'Error: '+E.Message,mtError);
@@ -155,28 +207,97 @@ begin
   StatusBarMainForm.Panels[1].Text:= DateToStr(now)+ ' '+ TimeToStr(now);
 end;
 
+procedure TMainForm.SetUpTab(MenuName: string);
+var
+  MyDB: TDBGrid;
+  MyDataSet: TMemDataset;
+  MyDataSource: TDataSource;
+begin
+  for i:= 0 to PageMenu.PageCount-1 do
+  begin
+    if (lowercase(PageMenu.Pages[i].Name) = LowerCase('TabSheet'+MenuName)) then
+    begin
+      PageMenu.Pages[i].Caption:= GetMessageAPI(MenuName);
+      PageMenu.Pages[i].TabVisible:=true;
+      PageMenu.ActivePage:= PageMenu.Pages[i];
+      break;
+    end;
+  end;
+  MyDataSource:= TDataSource(FindComponent('DS'+MenuName));
+  MyDataSet:= TMemDataset(FindComponent('MemDS'+MenuName));
+  MyDB:= TDBGrid(FindComponent('DBGrid'+MenuName));
+
+  if (MyDB <> nil) then
+  begin
+    MyDB.DataSource:= nil;
+    for i:=0 to MyDB.Columns.Count-1 do
+       MyDB.Columns[i].Title.Caption:= GetMessageAPI(MyDB.Columns[i].FieldName);
+  end;
+
+  if (MyDataSet <> nil) then
+    MyDataSet.Active:=true;
+
+  SlBody.Clear;
+  SlBody.Add('token='+User.Authkey);
+  SlBody.Add('page=1');
+  SlBody.Add('rows=10');
+  GetDataAPI(MenuName+'/list');
+  i:=0;
+  if (iserror = 0) then
+  begin
+    for JsEnum in JsArray do
+    begin
+      MyDataSet.Insert;
+      JsObject:= TJSONObject(JsEnum.Value);
+      for j:=0 to MyDataSet.FieldCount-1 do
+      begin
+        MyDataSet.Fields[j].AsString:= JsObject.Get(MyDataSet.Fields[j].FieldName);
+      end;
+      MyDataSet.Post;
+    end;
+  end;
+
+  if (MyDB <> nil) then
+     MyDB.DataSource:= MyDataSource;
+
+end;
+
 procedure TMainForm.TreeViewMainFormDblClick(Sender: TObject);
 var
-  TabMenu: TTabSheet;
-  i: integer;
+  //TabMenu: TTabSheet;
+  //i: integer;
   s: string;
 begin
-  TabMenu:= nil;
-  for i := 0 to PageMenu.PageCount-1 do
-  begin
-    s:= PageMenu.Pages[i].Caption;
-    if (s = TreeViewMainForm.Selected.Text) then
+  s:= GetMenuAccessName(TreeViewMainForm.Selected.Text);
+  SetUpTab(s);
+  {
+  //TODO: Generate Runtime based on Menu Code
+  try
+    TabMenu:= nil;
+    for i := 0 to PageMenu.PageCount-1 do
     begin
-      TabMenu:= PageMenu.Pages[i];
-      break;
-    end
-  end;
-  if (TabMenu = nil) then
-  begin
-    TabMenu:= PageMenu.AddTabSheet;
-    TabMenu.Caption:= TreeViewMainForm.Selected.Text;
-  end;
-  PageMenu.ActivePage:= TabMenu;
+      s:= PageMenu.Pages[i].Caption;
+      if (s = TreeViewMainForm.Selected.Text) then
+      begin
+        TabMenu:= PageMenu.Pages[i];
+        break;
+      end
+    end;
+    if (TabMenu = nil) then
+    begin
+      TabMenu:= PageMenu.AddTabSheet;
+      TabMenu.Caption:= TreeViewMainForm.Selected.Text;
+      SlBody.Clear;
+      SlBody.Add('id='+inttostr(GetMenuAccessID(TreeViewMainForm.Selected.Text)));
+      SlBody.Add('token='+User.Authkey);
+      GetDataAPI('menuaccess/one');
+      if (iserror = 0) then
+        MenuGenerator(TabMenu,ImageListButton);
+    end;
+    if (TabMenu <> nil) then
+      PageMenu.ActivePage:= TabMenu;
+  except
+  end;}
 end;
 
 procedure TMainForm.GetLanguageListAllUser();
@@ -204,4 +325,3 @@ begin
 end;
 
 end.
-

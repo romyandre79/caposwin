@@ -6,21 +6,41 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ActnList,
-  ExtCtrls, IniFiles, jsonparser, fpjson, fphttpclient, umessageform, process,RegExpr;
+  ExtCtrls, IniFiles, jsonparser, fpjson, fphttpclient, umessageform,
+  process,RegExpr,Buttons,strutils,StdCtrls,ComCtrls,Toolwin, DBCtrls, DBGrids,
+  memds, db,Grids;
 
 type
 
   { TBaseForm }
 
+  TMenuStructure=record
+    FormType: string;
+    MenuName: string;
+    ListUrl: string;
+    CopyUrl: string;
+    SaveUrl: string;
+    DeleteUrl: string;
+    UploadUrl: string;
+    DownPDF: string;
+    DownXLS: string;
+    Button: string;
+    Search: string;
+    Grid: TJSONData;
+    Page: integer;
+    Rows: integer;
+  end;
+
   TUserMenu = record
     MenuIcon: string;
     MenuName: string;
     MenuLabel: string;
-    MenuaccessId: integer;
+    MenuAccessId: integer;
     Description: string;
     MenuUrl: string;
     ParentId : string;
     SortOrder: integer;
+    MenuCode: string;
   end;
 
   TUser = record
@@ -33,13 +53,13 @@ type
     LanguageId: integer;
     ThemeId: integer;
     IsOnline: integer;
-    authkey: string;
-    wallpaper: string;
-    languagename: string;
-    themename: string;
+    Authkey: string;
+    Wallpaper: string;
+    LanguageName: string;
+    ThemeName: string;
     RecordStatus: integer;
-    menuitems: array of TUserMenu;
-    userfav: array of TUserMenu;
+    MenuItems: array of TUserMenu;
+    UserFav: array of TUserMenu;
   end;
 
   THost = class
@@ -47,6 +67,7 @@ type
     Title: string;
     Company: string;
     Serial: string;
+    Rows: integer;
     User: string;
     Password: string;
     Icon: string;
@@ -61,10 +82,13 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ToolButtonClick(Sender: TObject);
+
   private
 
   public
     Host                  : THost;
+    MenuStructure         : TMenuStructure;
     Pic                   : TPicture;
     FpClient              : TfpHttpClient;
     SlBody,RowsData       : TStringList;
@@ -75,7 +99,7 @@ type
     Parser                : TJSONParser;
     JsEnum                : TJSONEnum;
     IsError,Total         : integer;
-    Msg                   : string;
+    Msg,HeaderMsg         : string;
     FileIni               : TIniFile;
 
   protected
@@ -89,14 +113,23 @@ type
     function GetExternalIPAddress: string;
     function GetIpAddrList: string;
     function GetDataUser: string;
+    procedure MenuGenerator(ParentComponent: TWinControl;ParentImageList: TImageList);
+    procedure AddButtonToToolbar(var Bar: TToolBar; ButtonName, ButtonCaption: string;
+      ImageIndex: integer);
+    procedure FillGrid(MyMemDS: TMemDataset; MyDS: TDataSource; ListUrl: string;
+      Page, Rows: integer);
+    function GetAccess(MenuAction: string): boolean;
+    function GetMenuAccessID(MenuLabel: string): integer;
+    function GetSplitItem(Delimiter: Char; Str: string; Index: integer): string;
+    procedure GridDblClick(Sender: TObject);
+    procedure Split(Delimiter: Char; Str: string; ListOfStrings: TStrings);
+    function GetMenuAccessName(MenuLabel: string): string;
   end;
 
 var
   BaseForm              : TBaseForm;
   i,j                   : integer;
 
-const
-  HeaderMsg = 'Capella ERP Indonesia';
 
 implementation
 
@@ -111,33 +144,37 @@ end;
 
 procedure TBaseForm.FormCreate(Sender: TObject);
 begin
-    FileIni:= TIniFile.Create('caposwin.ini');
-    fpClient:= TfpHttpClient.Create(nil);
-    Host:= THost.Create;
-    Pic:= TPicture.Create;
-    slBody:= TStringList.Create;
-    try
-      Host.title:= FileIni.ReadString('MAIN','title','');
-      Host.company:= FileIni.ReadString('MAIN','company','');
-      Host.serial:= FileIni.ReadString('MAIN','serial','');
-      Host.icon:= FileIni.ReadString('MAIN','icon','');
-      Host.wallpaper:= FileIni.ReadString('MAIN','wallpaper','');
-      Host.server:= FileIni.ReadString('API','host','localhost');
-      Host.user:= FileIni.ReadString('API','user','');
-      Host.password:= FileIni.ReadString('API','password','');
-      Host.timeout:= FileIni.ReadInteger('API','timeout',0);
-      Host.HostIPExt:= FileIni.ReadString('API','hostipext','');
-      Host.HostIPGeo:= FileIni.ReadString('API','hostipgeo','');
-      fpClient.AllowRedirect:=true;
-      fpClient.IOTimeout:= Host.timeout;
-    finally
-     FreeAndNil(FileIni);
-    end;
+  FileIni:= TIniFile.Create('caposwin.ini');
+  fpClient:= TfpHttpClient.Create(nil);
+  Host:= THost.Create;
+  Pic:= TPicture.Create;
+  slBody:= TStringList.Create;
+  RowsData:= TStringList.Create;
+  try
+    Host.title:= FileIni.ReadString('MAIN','title','');
+    HeaderMsg:= Host.title;
+    Host.company:= FileIni.ReadString('MAIN','company','');
+    Host.serial:= FileIni.ReadString('MAIN','serial','');
+    Host.icon:= FileIni.ReadString('MAIN','icon','');
+    Host.wallpaper:= FileIni.ReadString('MAIN','wallpaper','');
+    Host.rows:= FileIni.ReadInteger('MAIN','rows',10);
+    Host.server:= FileIni.ReadString('API','host','localhost');
+    Host.user:= FileIni.ReadString('API','user','');
+    Host.password:= FileIni.ReadString('API','password','');
+    Host.timeout:= FileIni.ReadInteger('API','timeout',0);
+    Host.HostIPExt:= FileIni.ReadString('API','hostipext','');
+    Host.HostIPGeo:= FileIni.ReadString('API','hostipgeo','');
+    fpClient.AllowRedirect:=true;
+    fpClient.IOTimeout:= Host.timeout;
+  finally
+   FreeAndNil(FileIni);
+  end;
 end;
 
 procedure TBaseForm.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(slBody);
+  FreeAndNil(RowsData);
   FreeAndNil(fpClient);
   FreeAndNil(Host);
   FreeAndNil(Pic);
@@ -374,6 +411,323 @@ begin
   result:= User.UserName+','+GetExternalIPAddress+','+GetIpAddrList+','+lat+','+lon;
 end;
 
+procedure TBaseForm.Split(Delimiter: Char; Str: string; ListOfStrings: TStrings) ;
+begin
+  ListOfStrings.Clear;
+  ListOfStrings.Delimiter       := Delimiter;
+  ListOfStrings.StrictDelimiter := True;
+  ListOfStrings.DelimitedText   := Str;
+end;
+
+function TBaseForm.GetSplitItem(Delimiter: Char; Str: string; Index: integer): string;
+var ListofStrings: TStringList;
+begin
+  ListofStrings:= TStringList.Create;
+  try
+    ListOfStrings.Delimiter       := Delimiter;
+    ListOfStrings.StrictDelimiter := True;
+    ListOfStrings.DelimitedText   := Str;
+    result:= ListofStrings[index];
+  finally
+    FreeAndNil(ListofStrings);
+  end;
+end;
+
+function TBaseForm.GetAccess(MenuAction: string):boolean;
+begin
+  SlBody.Clear;
+  SlBody.Add('token='+User.Authkey);
+  SlBody.Add('menuname='+MenuStructure.MenuName);
+  slBody.Add('menuaction='+MenuAction);
+  GetDataAPI('sysadm/checkaccess');
+  result:=false;
+  if (iserror = 0) then
+  begin
+    for JsEnum in JsArray do begin
+      JsObject:= TJSONObject(JsEnum.Value);
+      if (JsObject.Get('access') = 1) then
+      begin
+        result:= true;
+        break;
+      end
+    end;
+  end;
+end;
+
+procedure TBaseForm.AddButtonToToolbar(var Bar: TToolBar; ButtonName,
+  ButtonCaption: string; ImageIndex: integer);
+var
+  NewBtn: TToolButton;
+  lastbtnidx: integer;
+begin
+  NewBtn := TToolButton.Create(bar);
+  NewBtn.Caption := ButtonCaption;
+  NewBtn.Name:= ButtonName;
+  NewBtn.ImageIndex:= ImageIndex;
+  lastbtnidx := bar.ButtonCount - 1;
+  if lastbtnidx > -1 then
+    NewBtn.Left := bar.Buttons[lastbtnidx].Left + bar.Buttons[lastbtnidx].Width
+  else
+    NewBtn.Left := 0;
+  NewBtn.Parent := bar;
+  NewBtn.OnClick:= @ToolButtonClick;
+end;
+
+procedure TBaseForm.ToolButtonClick(Sender: TObject);
+begin
+  case TToolButton(Sender).ImageIndex of
+    0: showmessage('new');
+    1: showmessage('edit');
+    2: showmessage('copy');
+    3: showmessage('save');
+    4: showmessage('pdf');
+    5: showmessage('xls');
+    6: ShowMessage('history');
+    7: ShowMessage('purge');
+  end;
+end;
+
+function TBaseForm.GetMenuAccessID(MenuLabel: string):integer;
+begin
+  for i:=0 to length(User.menuitems) do
+  begin
+   if (User.menuitems[i].MenuLabel = MenuLabel) then
+   begin
+     result:= User.menuitems[i].MenuaccessId;
+     break;
+   end;
+  end;
+end;
+
+function TBaseForm.GetMenuAccessName(MenuLabel: string):string;
+begin
+  for i:=0 to length(User.menuitems) do
+  begin
+   if (User.menuitems[i].MenuLabel = MenuLabel) then
+   begin
+     result:= User.menuitems[i].MenuName;
+     break;
+   end;
+  end;
+end;
+
+procedure TBaseForm.MenuGenerator(ParentComponent: TWinControl;ParentImageList: TImageList);
+var
+  PanelToolbar: TToolBar;
+  GridMenu: TDBGrid;
+  MemDSMenu: TMemDataset;
+  DataSourceMenu: TDataSource;
+  FieldDefMenu: TFieldDef;
+  TempStringList: TStringList;
+  MenuCode: string;
+  FieldTypeMenu: TFieldType;
+  FieldSize: word;
+  FieldRequired: boolean;
+  i: integer;
+  FieldColumn: TColumn;
+begin
+  TempStringList:= TStringList.Create;
+  try
+    for JsEnum in JsArray do
+    begin
+      jsObject:= TJSONObject(jsEnum.Value);
+      MenuStructure.MenuName:= JsObject.Get('menuname');
+      MenuCode:= JsObject.Get('menucode');
+      JsData:= GetJSON(MenuCode);
+      JsObject:= TJSONObject(JsData);
+      MenuStructure.FormType:= JsObject.Get('Form');
+      MenuStructure.ListUrl:= JsObject.Get('ListUrl');
+      MenuStructure.CopyUrl:= JsObject.Get('CopyUrl');
+      MenuStructure.SaveUrl:= JsObject.Get('SaveUrl');
+      MenuStructure.DeleteUrl:= JsObject.Get('DeleteUrl');
+      MenuStructure.UploadUrl:= JsObject.Get('UploadUrl');
+      MenuStructure.DownPDF:= JsObject.Get('DownPDF');
+      MenuStructure.DownXLS:= JsObject.Get('DownXLS');
+      MenuStructure.Button:= JsObject.Get('Button');
+      MenuStructure.Search:= JsObject.Get('Search');
+      MenuStructure.Grid:= JsObject.Find('Grid');
+    end;
+
+    PanelToolbar:= TToolBar.Create(ParentComponent);
+    PanelToolbar.Name:= 'PanelToolbar'+MenuStructure.MenuName;
+    PanelToolbar.Align:= alTop;
+    PanelToolbar.Height:= 50;
+    PanelToolbar.ButtonWidth:=36;
+    PanelToolbar.ButtonHeight:=36;
+    PanelToolbar.Caption:='';
+    PanelToolbar.EdgeInner:= esNone;
+    PanelToolbar.EdgeOuter:= esNone;
+    PanelToolbar.EdgeBorders:= [];
+    PanelToolbar.Visible:= true;
+    PanelToolbar.Flat:=true;
+    PanelToolbar.Images:= ParentImageList;
+    PanelToolbar.Parent:= ParentComponent;
+
+    if (GetAccess('iswrite') = true) then
+    begin
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'new')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonNew'+MenuStructure.MenuName, '',0);
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'edit')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonEdit'+MenuStructure.MenuName, '',1);
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'copy')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonCopy'+MenuStructure.MenuName, '',2);
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'save')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonSave'+MenuStructure.MenuName, '',3);
+    end;
+    if (GetAccess('isdownload') = true) then
+    begin
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'pdf')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonPdf'+MenuStructure.MenuName, '',4);
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'xls')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonXls'+MenuStructure.MenuName, '',5);
+    end;
+    if (AnsiContainsText(lowercase(MenuStructure.Button),'history')) then
+      AddButtonToToolbar(PanelToolbar, 'ButtonHistory'+MenuStructure.MenuName, '',6);
+    if (GetAccess('ispurge') = true) then
+      if (AnsiContainsText(lowercase(MenuStructure.Button),'purge')) then
+        AddButtonToToolbar(PanelToolbar, 'ButtonPurge'+MenuStructure.MenuName, '',7);
+
+    GridMenu:= TDBGrid.Create(ParentComponent);
+    GridMenu.Name:= 'Grid'+MenuStructure.MenuName;
+    GridMenu.Align:= alClient;
+    GridMenu.Visible:= true;
+    Gridmenu.Parent:= ParentComponent;
+    GridMenu.AutoEdit:=false;
+    GridMenu.OnDblClick:=@GridDblClick;
+    JsArray:= TJSONArray(MenuStructure.Grid);
+    for JsEnum in JsArray do
+    begin
+      jsObject:= TJSONObject(jsEnum.Value);
+      FieldColumn:= GridMenu.Columns.Add;
+      FieldColumn.FieldName:= JsObject.Get('fieldname');
+      FieldColumn.Title.Caption:= GetMessageAPI(JsObject.Get('fieldname'));
+      try
+        if (JsObject.Get('fieldkey') = 'true') then
+           FieldColumn.Visible:= false;
+      except
+        FieldColumn.Visible:= true;
+      end;
+      FieldColumn.Alignment:= taLeftJustify;
+      FieldColumn.Title.Alignment:= taCenter;
+      FieldColumn.Title.MultiLine:= true;
+      try
+        if (JsObject.Get('fieldtype') = 'integer') then
+          FieldColumn.Alignment:= taRightJustify
+        else
+        if (JsObject.Get('fieldtype') = 'decimal') then
+           FieldColumn.Alignment:= taRightJustify
+        else
+        if (JsObject.Get('fieldtype') = 'checkbox') then
+          FieldColumn.ButtonStyle:= cbsCheckboxColumn
+        else
+          FieldColumn.Alignment:= taLeftJustify;
+      except
+        FieldColumn.Alignment:= taLeftJustify;
+      end;
+      try
+        FieldColumn.Width:= strtoint(JsObject.Get('width'));
+      except
+        FieldColumn.Width:=50;
+      end;
+    end;
+
+    MemDSMenu:= TMemDataset.Create(Self);
+    MemDSMenu.Name:= 'MemDataSet'+MenuStructure.MenuName;
+    JsArray:= TJSONArray(MenuStructure.Grid);
+    i:=0;
+    for JsEnum in JsArray do
+    begin
+      FieldRequired:= false;
+      jsObject:= TJSONObject(jsEnum.Value);
+      try
+        if (JsObject.Get('fieldtype') = 'integer') then
+           FieldTypeMenu:= ftInteger
+        else
+        if (JsObject.Get('fieldtype') = 'string') then
+           FieldTypeMenu:= ftString
+        else
+        if (JsObject.Get('fieldtype') = 'text') then
+           FieldTypeMenu:= ftWideString
+        else
+        if (JsObject.Get('fieldtype') = 'decimal') then
+           FieldTypeMenu:= ftFloat
+        else
+        if (JsObject.Get('fieldtype') = 'checkbox') then
+           FieldTypeMenu:= ftInteger
+        else
+        if (JsObject.Get('fieldtype') = 'date') then
+           FieldTypeMenu:= ftDate
+        else
+        if (JsObject.Get('fieldtype') = 'datetime') then
+           FieldTypeMenu:= ftDateTime
+      except
+        FieldTypeMenu:= ftString;
+      end;
+      try
+        FieldSize:= strtoint(JsObject.Get('fieldsize'));
+      except
+        FieldSize:=0;
+      end;
+      try
+        FieldRequired:= StrToBool(JsObject.Get('fieldrequire'));
+      except
+      end;
+      FieldDefMenu:= MemDSMenu.FieldDefs.Add(JsObject.Get('fieldname'), FieldTypeMenu,
+        FieldSize, FieldRequired,i);
+      try
+        if (JsObject.Get('fieldkey') = 'true') then
+           FieldDefMenu.Attributes:= FieldDefMenu.Attributes + [faReadonly,faHiddenCol];
+      except
+      end;
+      i:=i+1;
+    end;
+    SlBody.Clear;
+    SlBody.Add('token='+User.Authkey);
+    RowsData.CommaText:= MenuStructure.Search;
+
+    DataSourceMenu:= TDataSource.Create(Self);
+    DataSourceMenu.Name:= 'DataSource'+MenuStructure.MenuName;
+    DataSourceMenu.DataSet:= MemDSMenu;
+
+    FillGrid(MemDSMenu, DataSourceMenu, MenuStructure.ListUrl,1,Host.Rows);
+    GridMenu.DataSource:= DataSourceMenu;
+
+  finally
+    FreeAndNil(TempStringList);
+  end;
+end;
+
+procedure TBaseForm.GridDblClick(Sender: TObject);
+begin
+  if (GetAccess('iswrite') = true) then
+    TDBGrid(Sender).Options:= TDBGrid(Sender).Options + [dgEditing];
+end;
+
+procedure TBaseForm.FillGrid(MyMemDS: TMemDataset; MyDS: TDataSource; ListUrl:string; Page, Rows: integer);
+var i:integer;
+begin
+  MyDS.DataSet:= nil;
+  if (MyMemDS.Active = false) then
+    MyMemDS.Active:=true;
+  SlBody.Add('page='+inttostr(Page));
+  SlBody.Add('rows='+inttostr(Rows));
+  GetDataAPI(ListUrl);i:=0;
+  if (iserror = 0) then
+  begin
+    MyMemDS.Insert;
+    for JsEnum in JsArray do
+    begin
+      JsObject:= TJSONObject(JsEnum.Value);
+      if (MyMemDS.FindField(JsObject.Names[i]) <> nil) then
+      begin
+       MyMemDS.FieldByName(JsObject.Names[i]).AsString:= JsObject.Get(JsObject.Names[i]);
+       i:=i+1;
+      end;
+    end;
+    MyMemDS.Post;
+  end;
+  MyDs.DataSet:= MyMemDS;
+end;
 
 end.
 

@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, ActnList, uBaseForm, fpjson, jsonparser, umainform, ssockets;
+  Buttons, ActnList, uBaseForm, fpjson, jsonparser, umainform,
+  ssockets;
 
 type
 
@@ -110,6 +111,10 @@ begin
              User.menuitems[i].sortorder:= jsObject.Get('sortorder')
           else
               User.menuitems[i].sortorder:= 0;
+          if (jsObject.Get('menucode') <> null) then
+             User.menuitems[i].menucode:= jsObject.Get('menucode')
+          else
+              User.menuitems[i].menucode:= '';
           i:= i+1;
         end;
         slBody.Clear;
@@ -155,6 +160,10 @@ begin
                User.userfav[i].sortorder:= jsObject.Get('sortorder')
             else
                 User.userfav[i].sortorder:= 0;
+            if (jsObject.Get('menucode') <> null) then
+               User.userfav[i].menucode:= jsObject.Get('menucode')
+            else
+                User.userfav[i].menucode:= '';
             i:= i+1;
           end;
         end;
