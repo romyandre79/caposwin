@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, ActnList, uBaseForm, fpjson, jsonparser, umainform,
-  ssockets;
+  uutility;
 
 type
 
@@ -26,9 +26,9 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    procedure actCloseExecute(Sender: TObject);
-    procedure actFormActivatedExecute(Sender: TObject);
-    procedure actLoginExecute(Sender: TObject);
+    procedure CloseExecute(Sender: TObject);
+    procedure LoginExecute(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
 
   public
@@ -44,7 +44,7 @@ implementation
 
 { TLoginForm }
 
-procedure TLoginForm.actLoginExecute(Sender: TObject);
+procedure TLoginForm.LoginExecute(Sender: TObject);
 begin
   slBody.Clear;
   slBody.Add('username='+edUserName.Text);
@@ -170,29 +170,29 @@ begin
       end;
       Self.Hide;
       MainForm:= TMainForm.Create(self);
-      MainForm.User:= Self.User;
       MainForm.ShowModal;
       Self.Show;
     end;
   except
-  on E: ESocketError do
+  on E: Exception do
      MessageDlg(HeaderMsg,'Error: '+E.ClassName+' '+E.Message,mtError,[mbOK],'')
   end;
 end;
 
-procedure TLoginForm.actCloseExecute(Sender: TObject);
+procedure TLoginForm.FormActivate(Sender: TObject);
 begin
-  Close;
-end;
-
-procedure TLoginForm.actFormActivatedExecute(Sender: TObject);
-begin
+  inherited;
   imgLogin.Picture.LoadFromFile(Host.icon);
   imgWallpaper.Picture.LoadFromFile('wallpaper/'+Host.wallpaper);
   Pic.LoadFromFile('icons/login.png');
   btnLogin.Glyph.Assign(Pic.Bitmap);
   Pic.LoadFromFile('icons/close.png');
   btnClose.Glyph.Assign(Pic.Bitmap);
+end;
+
+procedure TLoginForm.CloseExecute(Sender: TObject);
+begin
+  Close;
 end;
 
 end.

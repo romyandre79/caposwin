@@ -15,6 +15,7 @@ inherited MainForm: TMainForm
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   OnActivate = FormActivate
+  OnClose = nil
   OnDestroy = nil
   WindowState = wsMaximized
   object DBGrid1: TDBGrid[0]
@@ -79,17 +80,38 @@ inherited MainForm: TMainForm
     OnDblClick = TreeViewMainFormDblClick
     Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
-  object PageMenu: TPageControl[4]
+  object PanelButton: TPanel[4]
+    Left = 0
+    Height = 56
+    Top = 0
+    Width = 796
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 56
+    ClientWidth = 796
+    TabOrder = 2
+    object ButtonClose: TBitBtn
+      Left = 8
+      Height = 40
+      Top = 8
+      Width = 91
+      Caption = '&Close'
+      Color = clWhite
+      OnClick = ButtonCloseClick
+      TabOrder = 0
+    end
+  end
+  object PageMenu: TPageControl[5]
     Left = 312
     Height = 387
     Top = 56
     Width = 484
-    ActivePage = TabSheetLanguage
+    ActivePage = TabHome
     Align = alClient
     MultiLine = True
     PopupMenu = PopUpMainForm
-    TabIndex = 1
-    TabOrder = 2
+    TabIndex = 0
+    TabOrder = 4
     Options = [nboShowCloseButtons, nboMultiLine]
     object TabHome: TTabSheet
       Caption = '&Home'
@@ -109,7 +131,7 @@ inherited MainForm: TMainForm
           ClientHeight = 329
           ClientWidth = 468
           object LabelUserName: TLabel
-            Left = 24
+            Left = 20
             Height = 16
             Top = 24
             Width = 89
@@ -126,7 +148,7 @@ inherited MainForm: TMainForm
             TabOrder = 0
           end
           object LabelPassword: TLabel
-            Left = 24
+            Left = 20
             Height = 16
             Top = 56
             Width = 85
@@ -143,7 +165,7 @@ inherited MainForm: TMainForm
             TabOrder = 1
           end
           object LabelRealName: TLabel
-            Left = 24
+            Left = 20
             Height = 16
             Top = 88
             Width = 88
@@ -160,7 +182,7 @@ inherited MainForm: TMainForm
             TabOrder = 2
           end
           object LabelEmail: TLabel
-            Left = 24
+            Left = 20
             Height = 16
             Top = 120
             Width = 61
@@ -177,7 +199,7 @@ inherited MainForm: TMainForm
             TabOrder = 3
           end
           object LabelPhoneNo: TLabel
-            Left = 24
+            Left = 20
             Height = 16
             Top = 152
             Width = 80
@@ -194,7 +216,7 @@ inherited MainForm: TMainForm
             TabOrder = 4
           end
           object LabelLanguage: TLabel
-            Left = 22
+            Left = 20
             Height = 16
             Top = 184
             Width = 85
@@ -213,7 +235,7 @@ inherited MainForm: TMainForm
             TabOrder = 5
           end
           object LabelTheme: TLabel
-            Left = 22
+            Left = 20
             Height = 16
             Top = 216
             Width = 70
@@ -242,136 +264,6 @@ inherited MainForm: TMainForm
           end
         end
       end
-    end
-    object TabSheetLanguage: TTabSheet
-      Caption = 'TabSheetLanguage'
-      ClientHeight = 358
-      ClientWidth = 476
-      object ToolBarLanguage: TToolBar
-        Left = 0
-        Height = 48
-        Top = 0
-        Width = 476
-        ButtonHeight = 32
-        ButtonWidth = 32
-        Caption = 'ToolBarLanguage'
-        Images = ImageListButton
-        TabOrder = 0
-        object ToolButtonLanguageNew: TToolButton
-          Left = 1
-          Top = 2
-          Caption = 'ToolButtonLanguageNew'
-          ImageIndex = 0
-        end
-        object ToolButtonLanguageEdit: TToolButton
-          Left = 37
-          Top = 2
-          Caption = 'ToolButtonLanguageEdit'
-          ImageIndex = 1
-        end
-        object ToolButtonLanguageSave: TToolButton
-          Left = 105
-          Top = 2
-          Caption = 'ToolButtonLanguageSave'
-          ImageIndex = 3
-        end
-        object ToolButtonLanguagePDF: TToolButton
-          Left = 141
-          Top = 2
-          Caption = 'ToolButtonLanguagePDF'
-          ImageIndex = 4
-        end
-        object ToolButtonLanguageXLS: TToolButton
-          Left = 173
-          Top = 2
-          Caption = 'ToolButtonLanguageXLS'
-          ImageIndex = 4
-        end
-        object ToolButtonLanguageSearch: TToolButton
-          Left = 209
-          Top = 2
-          Caption = 'ToolButtonLanguageSearch'
-        end
-        object ToolButtonLanguageHistory: TToolButton
-          Left = 245
-          Top = 2
-          Caption = 'ToolButtonLanguageHistory'
-          ImageIndex = 7
-        end
-        object ToolButtonLanguagePurge: TToolButton
-          Left = 281
-          Top = 2
-          Caption = 'ToolButtonLanguagePurge'
-          ImageIndex = 8
-        end
-        object ToolButtonLanguageCopy: TToolButton
-          Left = 73
-          Top = 2
-          Caption = 'ToolButtonLanguageCopy'
-          ImageIndex = 2
-        end
-      end
-      object DBGridLanguage: TDBGrid
-        Left = 0
-        Height = 310
-        Top = 48
-        Width = 476
-        Align = alClient
-        AutoEdit = False
-        BorderStyle = bsNone
-        Color = clWindow
-        Columns = <        
-          item
-            Title.Alignment = taCenter
-            Title.Caption = 'languageid'
-            Width = 100
-            FieldName = 'languageid'
-          end        
-          item
-            Title.Alignment = taCenter
-            Title.Caption = 'languagename'
-            Width = 200
-            FieldName = 'languagename'
-          end        
-          item
-            ButtonStyle = cbsCheckboxColumn
-            Title.Alignment = taCenter
-            Title.Caption = 'recordstatus'
-            Width = 100
-            FieldName = 'recordstatus'
-          end>
-        DataSource = DSLanguage
-        Flat = True
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
-        TabOrder = 1
-        TitleFont.CharSet = ANSI_CHARSET
-        TitleFont.Color = clBlack
-        TitleFont.Height = -13
-        TitleFont.Name = 'Tahoma'
-        TitleFont.Pitch = fpVariable
-        TitleFont.Quality = fqDraft
-      end
-    end
-  end
-  object PanelButton: TPanel[5]
-    Left = 0
-    Height = 56
-    Top = 0
-    Width = 796
-    Align = alTop
-    BevelOuter = bvNone
-    ClientHeight = 56
-    ClientWidth = 796
-    TabOrder = 3
-    object ButtonClose: TBitBtn
-      Left = 8
-      Height = 40
-      Top = 8
-      Width = 91
-      Caption = '&Close'
-      Color = clWhite
-      OnClick = ButtonCloseClick
-      TabOrder = 0
     end
   end
   object TimerMainForm: TTimer[6]

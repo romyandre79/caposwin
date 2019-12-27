@@ -9,7 +9,8 @@ inherited LoginForm: TLoginForm
   ClientHeight = 688
   ClientWidth = 1354
   Color = clWhite
-  OnActivate = actFormActivatedExecute
+  OnActivate = FormActivate
+  OnClose = nil
   OnCreate = FormCreate
   OnDestroy = nil
   WindowState = wsMaximized
@@ -84,7 +85,7 @@ inherited LoginForm: TLoginForm
     Width = 72
     Caption = '&Login'
     Default = True
-    OnClick = actLoginExecute
+    OnClick = LoginExecute
     TabOrder = 2
   end
   object btnClose: TBitBtn[6]
@@ -93,7 +94,7 @@ inherited LoginForm: TLoginForm
     Top = 464
     Width = 80
     Caption = '&Close'
-    OnClick = actCloseExecute
+    OnClick = CloseExecute
     TabOrder = 3
   end
   object edUserName: TEdit[7]

@@ -1,10 +1,11 @@
 object BaseForm: TBaseForm
   Left = 277
-  Height = 240
+  Height = 217
   Top = 120
-  Width = 320
+  Width = 342
   Caption = 'Base Form'
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ShowHint = True

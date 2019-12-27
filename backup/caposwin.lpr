@@ -7,14 +7,14 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, indylaz, uBaseForm, uRESTRequest, uloginform
+  Forms, memdslaz, uBaseForm, uloginform, umessageform, uutility
   { you can add units after this };
 
 {$R *.res}
 
 begin
   RequireDerivedFormResource:=True;
-  Application.Title:='Capella POS';
+  Application.Title:='Capella ERP Indonesia';
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TLoginForm, LoginForm);

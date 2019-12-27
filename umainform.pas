@@ -6,68 +6,58 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  Menus, Buttons, StdCtrls, DBGrids, uBaseForm, db, memds, jsonparser,fpjson;
+  Menus, Buttons, StdCtrls, DBGrids, uBaseForm, db, memds, jsonparser,fpjson,
+  uutility;
 
 type
 
   { TMainForm }
 
   TMainForm = class(TBaseForm)
-    ButtonOK: TBitBtn;
     ButtonClose: TBitBtn;
+    ButtonOK: TBitBtn;
     ComboBoxLanguage: TComboBox;
     ComboBoxTheme: TComboBox;
-    DBGridLanguage: TDBGrid;
     DSLanguage: TDataSource;
     DBGrid1: TDBGrid;
+    EditEmail: TEdit;
+    EditPassword: TEdit;
     EditPhoneNo: TEdit;
     EditRealName: TEdit;
-    EditEmail: TEdit;
     EditUserName: TEdit;
-    EditPassword: TEdit;
     ImageListButton: TImageList;
     ImageListMainForm: TImageList;
     ImageWallpaper: TImage;
-    LabelTheme: TLabel;
-    LabelPhoneNo: TLabel;
-    LabelLanguage: TLabel;
-    LabelRealName: TLabel;
     LabelEmail: TLabel;
-    LabelUserName: TLabel;
+    LabelLanguage: TLabel;
     LabelPassword: TLabel;
+    LabelPhoneNo: TLabel;
+    LabelRealName: TLabel;
+    LabelTheme: TLabel;
+    LabelUserName: TLabel;
     MemDSLanguage: TMemDataset;
     MenuItemCloseTab: TMenuItem;
     PageHome: TPageControl;
-    PanelButton: TPanel;
     PageMenu: TPageControl;
+    PanelButton: TPanel;
     PopUpMainForm: TPopupMenu;
     SaveDialogMainForm: TSaveDialog;
     StatusBarMainForm: TStatusBar;
     TabHome: TTabSheet;
     TabProfilUser: TTabSheet;
-    TabSheetLanguage: TTabSheet;
     TimerMainForm: TTimer;
-    ToolBarLanguage: TToolBar;
-    ToolButtonLanguageCopy: TToolButton;
-    ToolButtonLanguagePurge: TToolButton;
-    ToolButtonLanguageHistory: TToolButton;
-    ToolButtonLanguageSearch: TToolButton;
-    ToolButtonLanguageXLS: TToolButton;
-    ToolButtonLanguagePDF: TToolButton;
-    ToolButtonLanguageSave: TToolButton;
-    ToolButtonLanguageEdit: TToolButton;
-    ToolButtonLanguageNew: TToolButton;
     TreeViewMainForm: TTreeView;
     procedure ButtonCloseClick(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure TimerMainFormTimer(Sender: TObject);
     procedure TreeViewMainFormDblClick(Sender: TObject);
+    procedure GridDblClick(Sender: TObject);
+    procedure ToolButtonClick(Sender: TObject);
   private
     FLanguage, FTheme: TStringList;
     procedure GetLanguageListAllUser();
     procedure GetThemeListAllUser();
-    procedure SetUpTab(MenuName: string);
   public
 
   end;
@@ -162,16 +152,15 @@ begin
   Pic.LoadFromFile('icons/xls.png');
   ImageListButton.Add(Pic.Bitmap,nil);
   Pic:=TPicture.Create;
+  Pic.LoadFromFile('icons/search.png');
+  ImageListButton.Add(Pic.Bitmap,nil);
+  Pic:=TPicture.Create;
   Pic.LoadFromFile('icons/history.png');
   ImageListButton.Add(Pic.Bitmap,nil);
   Pic:=TPicture.Create;
   Pic.LoadFromFile('icons/purge.png');
   ImageListButton.Add(Pic.Bitmap,nil);
   PageMenu.ActivePageIndex:=0;
-  For i:= 1 to PageMenu.PageCount - 1 do
-  begin
-    PageMenu.Pages[i].TabVisible:= false;
-  end;
 end;
 
 procedure TMainForm.ButtonCloseClick(Sender: TObject);
@@ -207,73 +196,15 @@ begin
   StatusBarMainForm.Panels[1].Text:= DateToStr(now)+ ' '+ TimeToStr(now);
 end;
 
-procedure TMainForm.SetUpTab(MenuName: string);
-var
-  MyDB: TDBGrid;
-  MyDataSet: TMemDataset;
-  MyDataSource: TDataSource;
-begin
-  for i:= 0 to PageMenu.PageCount-1 do
-  begin
-    if (lowercase(PageMenu.Pages[i].Name) = LowerCase('TabSheet'+MenuName)) then
-    begin
-      PageMenu.Pages[i].Caption:= GetMessageAPI(MenuName);
-      PageMenu.Pages[i].TabVisible:=true;
-      PageMenu.ActivePage:= PageMenu.Pages[i];
-      break;
-    end;
-  end;
-  MyDataSource:= TDataSource(FindComponent('DS'+MenuName));
-  MyDataSet:= TMemDataset(FindComponent('MemDS'+MenuName));
-  MyDB:= TDBGrid(FindComponent('DBGrid'+MenuName));
-
-  if (MyDB <> nil) then
-  begin
-    MyDB.DataSource:= nil;
-    for i:=0 to MyDB.Columns.Count-1 do
-       MyDB.Columns[i].Title.Caption:= GetMessageAPI(MyDB.Columns[i].FieldName);
-  end;
-
-  if (MyDataSet <> nil) then
-    MyDataSet.Active:=true;
-
-  SlBody.Clear;
-  SlBody.Add('token='+User.Authkey);
-  SlBody.Add('page=1');
-  SlBody.Add('rows=10');
-  GetDataAPI(MenuName+'/list');
-  i:=0;
-  if (iserror = 0) then
-  begin
-    for JsEnum in JsArray do
-    begin
-      MyDataSet.Insert;
-      JsObject:= TJSONObject(JsEnum.Value);
-      for j:=0 to MyDataSet.FieldCount-1 do
-      begin
-        MyDataSet.Fields[j].AsString:= JsObject.Get(MyDataSet.Fields[j].FieldName);
-      end;
-      MyDataSet.Post;
-    end;
-  end;
-
-  if (MyDB <> nil) then
-     MyDB.DataSource:= MyDataSource;
-
-end;
-
 procedure TMainForm.TreeViewMainFormDblClick(Sender: TObject);
 var
-  //TabMenu: TTabSheet;
-  //i: integer;
+  TabMenu: TTabSheet;
+  i: integer;
   s: string;
 begin
-  s:= GetMenuAccessName(TreeViewMainForm.Selected.Text);
-  SetUpTab(s);
-  {
-  //TODO: Generate Runtime based on Menu Code
-  try
-    TabMenu:= nil;
+  TabMenu:= TTabSheet.Create(PageMenu);
+  TabMenu.Caption:='';
+  //try
     for i := 0 to PageMenu.PageCount-1 do
     begin
       s:= PageMenu.Pages[i].Caption;
@@ -283,7 +214,7 @@ begin
         break;
       end
     end;
-    if (TabMenu = nil) then
+    if (TabMenu.Caption = '') then
     begin
       TabMenu:= PageMenu.AddTabSheet;
       TabMenu.Caption:= TreeViewMainForm.Selected.Text;
@@ -293,11 +224,21 @@ begin
       GetDataAPI('menuaccess/one');
       if (iserror = 0) then
         MenuGenerator(TabMenu,ImageListButton);
+      if (FindComponent('Grid'+GetMenuAccessName(TreeViewMainForm.Selected.Text)) <> nil) then
+         TDBGrid(FindComponent('Grid'+GetMenuAccessName(TreeViewMainForm.Selected.Text))).OnClick:= @GridDblClick;
+      if (FindComponent('ButtonNew'+GetMenuAccessName(TreeViewMainForm.Selected.Text)) <> nil) then
+         TToolButton(FindComponent('ButtonNew'+GetMenuAccessName(TreeViewMainForm.Selected.Text))).OnClick:= @ToolButtonClick;
+      if (FindComponent('ButtonEdit'+GetMenuAccessName(TreeViewMainForm.Selected.Text)) <> nil) then
+         TToolButton(FindComponent('ButtonEdit'+GetMenuAccessName(TreeViewMainForm.Selected.Text))).OnClick:= @ToolButtonClick;
+      if (FindComponent('ButtonCopy'+GetMenuAccessName(TreeViewMainForm.Selected.Text)) <> nil) then
+         TToolButton(FindComponent('ButtonCopy'+GetMenuAccessName(TreeViewMainForm.Selected.Text))).OnClick:= @ToolButtonClick;
+      if (FindComponent('ButtonSave'+GetMenuAccessName(TreeViewMainForm.Selected.Text)) <> nil) then
+         TToolButton(FindComponent('ButtonSave'+GetMenuAccessName(TreeViewMainForm.Selected.Text))).OnClick:= @ToolButtonClick;
     end;
-    if (TabMenu <> nil) then
+    if (TabMenu.Caption <> '') then
       PageMenu.ActivePage:= TabMenu;
-  except
-  end;}
+  //except
+  //end;
 end;
 
 procedure TMainForm.GetLanguageListAllUser();
@@ -321,6 +262,26 @@ begin
     for i:= 0 to RowsData.Count-1 do
       ComboBoxTheme.Items.Add(RowsData.Names[i]);
   except
+  end;
+end;
+
+procedure TMainForm.GridDblClick(Sender: TObject);
+begin
+  if (GetAccess('iswrite') = true) then
+     TDBGrid(Sender).Options:= TDBGrid(Sender).Options + [dgEditing];
+end;
+
+procedure TMainForm.ToolButtonClick(Sender: TObject);
+begin
+  case TToolButton(Sender).ImageIndex of
+    0: showmessage('new');
+    1: showmessage('edit');
+    2: showmessage('copy');
+    3: showmessage('save');
+    4: showmessage('pdf');
+    5: showmessage('xls');
+    6: ShowMessage('history');
+    7: ShowMessage('purge');
   end;
 end;
 
